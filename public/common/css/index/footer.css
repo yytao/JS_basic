@@ -1,0 +1,34 @@
+.gm-footer{
+	background: #c10b1b;
+	color:#fff;
+	padding-top:15px;
+	height:48px;
+	line-height:48px;
+	font-size:18px;
+}
+.pointer{
+
+	cursor: pointer;
+
+}
+.gm-footer-introduce{
+	padding:20px 0 ;
+	background:#e9e9e9;
+}
+.contact-top{
+	cursor: pointer;
+	width:45px;
+	height:45px;
+	position: fixed;
+	top:80%;
+	right:1%;
+	background-color:#c10b1b;
+}
+@media screen and (max-width:767px) {
+	.gm-footer{
+		height:140px;
+	}
+	.gm-footer-column{
+		margin:15px 0;
+	}
+}
