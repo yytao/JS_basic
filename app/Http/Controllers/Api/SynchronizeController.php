@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Magazine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SynchronizeController extends Controller
 {
@@ -27,22 +28,35 @@ class SynchronizeController extends Controller
         {
             if($item == '.' || $item == '..')
                 continue;
+            $page_date = date('Y-m-d', strtotime($item));
+            $year = date('Y', strtotime($item));
+            $month = date('m', strtotime($item));
 
+            $is_exist = Magazine::where('page_date', $page_date)->first();
+            if(isset($is_exist->id) && !empty($is_exist) && $is_exist->id > 0)
+                continue;
+
+            $magazine_id = $this->getRandomString(6).'-'.$this->getRandomString(6).'-'.$this->getRandomString(6).'-';
+            $magazine_id .= $this->getRandomString(5).'-'.$this->getRandomString(5);
             //组装杂志表数组创建，获取到杂志ID
-            $data['magazine_id'] = '';
+            $data['magazine_id'] = $magazine_id;
             $data['subject_name'] = '神州学人';
             $data['author'] = '朱国亮';
             $data['isbn'] = '1002-6738';
-            $data['page_name'] = '第1期';
-            $data['page_no'] = '1';
+            $data['page_name'] = '第'.(int)$month.'期';
+            $data['page_no'] = (int)$month;
+            $data['year'] = $year;
+            $data['page_date'] = $page_date;
 
-            $data['year'] = '2019';
-            $data['page_date'] = '2019-01-01';
-            $data['mimg'] = '';
+            $filename = 'magazine/mimg/'.$this->getRandomString().'.jpg';
+            $disk = Storage::disk('root');
+            $disk->copy('/public/journal/'.$item.'/image/'.'封面.jpg', '/public/ad-upload/'.$filename);
+
+            $data['mimg'] = $filename;
             $data['pdf_file'] = '';
 
             $result = Magazine::create($data);
-            dd($return);
+            dd($data);
         }
 
         //response返回，200状态
@@ -60,5 +74,13 @@ class SynchronizeController extends Controller
 
 
     }
+
+
+
+
+
+
+
+
 
 }

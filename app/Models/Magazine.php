@@ -9,6 +9,7 @@ class Magazine extends Model
 {
     use HasFactory;
     protected $table = "zz_magazine";
+    protected $guarded = [];
 
     protected function serializeDate(\DateTimeInterface $date){
         return $date->format('Y-m-d H:i:s');
