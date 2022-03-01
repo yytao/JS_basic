@@ -41,9 +41,8 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body" id="box-body">
-
-                    <pre class="output-body">Simplicity is the ultimate sophistication. - Leonardo da Vinci</pre>
-
+                    <pre class="output-body"></pre>
+                    <pre class="output-body"></pre>
                 </div>
 
                 <!-- /.box-body -->
@@ -63,8 +62,11 @@
                     url: '/api/synchronize',
                     success: function (data) {
                         if ((typeof data) == 'object' && data.msg == 'success') {
-                           $('.output-box').removeClass('hide');
-                           $('.output-box .output-body').html(data.data);
+                            $('.output-box').removeClass('hide');
+                            for(var value of data.info)
+                            {
+                                $('.output-box .output-body').html("<pre class='output-body'>"+value+" is done</pre>");
+                            }
                         }
                         NProgress.done();
                     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Models\ArticleList;
 use App\Models\Magazine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,13 +25,17 @@ class SynchronizeController extends Controller
 
         //扫描根目录下，每一期杂志文件夹
         $list = scandir($dir);
+
         foreach ($list as $k=>$item)
         {
             if($item == '.' || $item == '..')
                 continue;
-            $page_date = date('Y-m-d', strtotime($item));
-            $year = date('Y', strtotime($item));
-            $month = date('m', strtotime($item));
+
+            preg_match('/(\d{8})/', $item, $reg_result);
+
+            $page_date = date('Y-m-d', strtotime($reg_result[0]));
+            $year = date('Y', strtotime($reg_result[0]));
+            $month = date('m', strtotime($reg_result[0]));
 
             $is_exist = Magazine::where('page_date', $page_date)->first();
             if(isset($is_exist->id) && !empty($is_exist) && $is_exist->id > 0)
@@ -50,13 +55,14 @@ class SynchronizeController extends Controller
 
             $filename = 'magazine/mimg/'.$this->getRandomString().'.jpg';
             $disk = Storage::disk('root');
-            $disk->copy('/public/journal/'.$item.'/image/'.'封面.jpg', '/public/ad-upload/'.$filename);
+            $disk->copy('/public/journal/'.$item.'/图片/'.'封面.jpg', '/public/ad-upload/'.$filename);
 
             $data['mimg'] = $filename;
             $data['pdf_file'] = '';
-
             $result = Magazine::create($data);
-            dd($data);
+
+            $this->excuArticle($data['magazine_id'], $item);
+            $return[$item] = $item;
         }
 
         //response返回，200状态
@@ -66,21 +72,31 @@ class SynchronizeController extends Controller
         ], 200);
     }
 
-    public static function excuFile($dir = Null)
+    public function excuArticle($magazine_id, $folder = NULL)
     {
-        if(empty($dir)){ return false; }
+        if(empty($folder)){ return false; }
 
+        $disk = Storage::disk('root');
 
+        $files = $disk->allFiles('public/journal/'.$folder.'/文字/');
 
+        foreach ($files as $k=>$item){
+            $article = $disk->get($item);
+            $content = mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
+
+            $article_id = $this->getRandomString(6).'-'.$this->getRandomString(6).'-'.$this->getRandomString(6).'-';
+            $article_id .= $this->getRandomString(5).'-'.$this->getRandomString(5);
+
+            $itemArr = explode('/', $item);
+            $title = array_pop($itemArr);
+
+            $data['magazine_id'] = $magazine_id;
+            //$data['article_id'] = $article_id;
+            $data['title'] = $title;
+            $data['content'] = $content;
+
+            ArticleList::create($data);
+        }
 
     }
-
-
-
-
-
-
-
-
-
 }
