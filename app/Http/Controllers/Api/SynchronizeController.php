@@ -31,6 +31,7 @@ class SynchronizeController extends Controller
             if($item == '.' || $item == '..')
                 continue;
 
+            $insertData = [];
             preg_match('/(\d{8})/', $item, $reg_result);
 
             $page_date = date('Y-m-d', strtotime($reg_result[0]));
@@ -44,24 +45,24 @@ class SynchronizeController extends Controller
             $magazine_id = $this->getRandomString(6).'-'.$this->getRandomString(6).'-'.$this->getRandomString(6).'-';
             $magazine_id .= $this->getRandomString(5).'-'.$this->getRandomString(5);
             //组装杂志表数组创建，获取到杂志ID
-            $data['magazine_id'] = $magazine_id;
-            $data['subject_name'] = '神州学人';
-            $data['author'] = '朱国亮';
-            $data['isbn'] = '1002-6738';
-            $data['page_name'] = '第'.(int)$month.'期';
-            $data['page_no'] = (int)$month;
-            $data['year'] = $year;
-            $data['page_date'] = $page_date;
+            $insertData['magazine_id'] = $magazine_id;
+            $insertData['subject_name'] = '神州学人';
+            $insertData['author'] = '朱国亮';
+            $insertData['isbn'] = '1002-6738';
+            $insertData['page_name'] = '第'.(int)$month.'期';
+            $insertData['page_no'] = (int)$month;
+            $insertData['year'] = $year;
+            $insertData['page_date'] = $page_date;
 
             $filename = 'magazine/mimg/'.$this->getRandomString().'.jpg';
             $disk = Storage::disk('root');
             $disk->copy('/public/journal/'.$item.'/图片/'.'封面.jpg', '/public/ad-upload/'.$filename);
 
-            $data['mimg'] = $filename;
-            $data['pdf_file'] = '';
-            $result = Magazine::create($data);
+            $insertData['mimg'] = $filename;
+            $insertData['pdf_file'] = '';
+            $result = Magazine::create($insertData);
 
-            $this->excuArticle($data['magazine_id'], $item);
+            $this->excuArticle($insertData['magazine_id'], $item);
             $return[$item] = $item;
         }
 
@@ -76,6 +77,7 @@ class SynchronizeController extends Controller
     {
         if(empty($folder)){ return false; }
 
+        $insertData = [];
         $disk = Storage::disk('root');
 
         $files = $disk->allFiles('public/journal/'.$folder.'/文字/');
@@ -83,6 +85,15 @@ class SynchronizeController extends Controller
         foreach ($files as $k=>$item){
             $article = $disk->get($item);
             $content = mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
+            $content = str_replace("\r\n", '<br>', $content);
+            $content = str_replace("\n", '<br>', $content);
+            $content = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $content);
+            $contentArr = explode('<br>', $content);
+            //处理每个元素，将<br>替换为段落p标签
+            array_walk($contentArr, function(&$value, $key){
+                $value = "<p>" . $value . "</p>";
+            });
+            $newContent = implode('', $contentArr);
 
             $article_id = $this->getRandomString(6).'-'.$this->getRandomString(6).'-'.$this->getRandomString(6).'-';
             $article_id .= $this->getRandomString(5).'-'.$this->getRandomString(5);
@@ -90,13 +101,15 @@ class SynchronizeController extends Controller
             $itemArr = explode('/', $item);
             $title = array_pop($itemArr);
 
-            $data['magazine_id'] = $magazine_id;
-            //$data['article_id'] = $article_id;
-            $data['title'] = $title;
-            $data['content'] = $content;
+            $insertData['magazine_id'] = $magazine_id;
+            $insertData['article_id'] = $article_id;
+            $insertData['title'] = $title;
+            $insertData['content'] = $newContent;
 
-            ArticleList::create($data);
+            ArticleList::create($insertData);
+
+            dd($insertData);
         }
-
     }
+
 }
