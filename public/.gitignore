@@ -1,3 +1,6 @@
 journal/
 vendor/
 storage
+.htaccess
+.user.ini
+.rewrite.conf
