@@ -28,7 +28,7 @@ class CatalogueController extends Controller
             ->first();
 
         $articleList = ArticleList::where('magazine_id', $magazine->magazine_id)
-            ->orderBy('sort')
+            ->orderBy('sort', 'asc')
             ->get();
 
         return view('catalogue', compact(

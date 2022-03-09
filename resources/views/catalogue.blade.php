@@ -32,7 +32,7 @@
                     @foreach($articleList as $k=>$item)
 					<div class="col-md-12 col-xs-12 gm-right2-col">
 						<div class="col-md-9 col-xs-12">
-							<span class="btn btn-danger">&nbsp;{{ $k+1 }}&nbsp;</span>
+							<span class="btn btn-danger">&nbsp;{{ $item->sort }}&nbsp;</span>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="/article/{{ $item->article_id }}/magaid/{{ $item->magazine_id }}" target="_blank">
                                 {{ $item->title }}

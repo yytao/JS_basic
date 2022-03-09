@@ -34,6 +34,7 @@ class ArticleController extends AdminController
             $filter->equal('magazine_id', '选择期刊')->select(Magazine::getOptions());
 
         });
+        $grid->model()->orderBy('sort', 'asc');
 
         $grid->column('id', __('Id'));
         $grid->column('magazine_id', __('所属杂志'))->display(function ($magazine_id){
@@ -44,6 +45,7 @@ class ArticleController extends AdminController
         $grid->column('title', __('标题'));
         $grid->column('subtitle', __('副题'));
         $grid->column('author', __('作者'));
+        $grid->column('sort', __('排序'))->editable();
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('修改时间'));
 

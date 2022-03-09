@@ -63,7 +63,9 @@ class SynchronizeController extends Controller
             $result = Magazine::create($insertData);
 
             $this->excuArticle($insertData['magazine_id'], $item);
-            $return[$item] = $item;
+            $return[] = $item;
+
+
         }
 
         //response返回，200状态
@@ -84,7 +86,7 @@ class SynchronizeController extends Controller
 
         foreach ($files as $k=>$item){
             $article = $disk->get($item);
-            $content = mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
+            $content = @mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
             $content = str_replace("\r\n", '<br>', $content);
             $content = str_replace("\n", '<br>', $content);
             $content = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $content);
@@ -108,8 +110,37 @@ class SynchronizeController extends Controller
 
             ArticleList::create($insertData);
 
-            dd($insertData);
+//            dd($insertData);
         }
+    }
+
+
+    /*
+     * 清洗文章数据
+     *
+     */
+    public function washArticle()
+    {
+
+        $list = ArticleList::get();
+
+        foreach ($list as $k=>$item)
+        {
+
+            preg_match_all("/(?<=\[)[^\]]+/i", $item->title, $reg_result);
+            if($reg_result[0][0] == '目录')
+                continue;
+
+            $item->column = $reg_result[0][0];
+            $item->author = @$reg_result[0][1];
+            $item->save();
+        }
+
+        //response返回，200状态
+        return response([
+            'msg' => 'success',
+            'info' => "wash program is done",
+        ], 200);
     }
 
 }

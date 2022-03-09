@@ -20,7 +20,7 @@ class IndexController extends Controller
         if(empty($year)) { $year = date('Y'); }
         $magazine = Magazine::select('magazine_id','page_name','mimg','pdf_file','page_date')
             ->where('year', $year)
-            ->orderBy('page_no', 'desc')
+            ->orderBy('page_no', 'asc')
             ->get()
             ->toArray();
 

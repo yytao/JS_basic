@@ -11,7 +11,7 @@
     <div class="col-md-12 gm-content">
     @foreach($magazine as $k=>$item)
 
-        @if(($k+1)%4 == 0)
+        @if(($k)%4 == 0)
             </div>
             <div class="col-md-12 gm-content">
         @endif

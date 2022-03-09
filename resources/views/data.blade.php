@@ -26,7 +26,13 @@
                             <td>1.</td>
                             <td><code>同步杂志数据</code></td>
                             <td>点击RUN按钮，开始同步杂志数据写入数据库。</td>
-                            <td><a class="btn btn-xs btn-primary run-task" data-id="1">Run</a></td>
+                            <td><a class="btn btn-xs btn-primary run-synchronize" data-id="1">Run</a></td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td><code>处理文章标题</code></td>
+                            <td>点击RUN按钮，开始清洗文章数据。</td>
+                            <td><a class="btn btn-xs btn-primary run-wash-article" data-id="2">Run</a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -54,7 +60,7 @@
 <div class="modal" tabindex="-1" role="dialog" id="app-admin-actions-feedback">
     <script data-exec-on-popstate="">
         $(function () {
-            $('.run-task').click(function (e) {
+            $('.run-synchronize').click(function (e) {
                 var id = $(this).data('id');
                 NProgress.start();
                 $.ajax({
@@ -65,13 +71,34 @@
                             $('.output-box').removeClass('hide');
                             for(var value of data.info)
                             {
-                                $('.output-box .output-body').html("<pre class='output-body'>"+value+" is done</pre>");
+                                $('.output-box .output-body').append("<pre class='output-body'>"+value+" is done</pre>");
                             }
                         }
                         NProgress.done();
                     }
                 });
             });
+
+
+
+
+            $('.run-wash-article').click(function (e) {
+                var id = $(this).data('id');
+                NProgress.start();
+                $.ajax({
+                    method: 'GET',
+                    url: '/api/wash_article',
+                    success: function (data) {
+                        if ((typeof data) == 'object' && data.msg == 'success') {
+                            $('.output-box').removeClass('hide');
+                            $('.output-box .output-body').append("<pre class='output-body'>"+data.info+" is done</pre>");
+                        }
+                        NProgress.done();
+                    }
+                });
+            });
+
+
         });
     </script>
 </div>

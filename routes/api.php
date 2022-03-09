@@ -13,5 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::match(['get'], '/synchronize', [App\Http\Controllers\Api\SynchronizeController::class, 'index']);
+Route::match(['get'], '/wash_article', [App\Http\Controllers\Api\SynchronizeController::class, 'washArticle']);
 
 //Route::match(['get','post'], '/synchronize', 'Api\SynchronizeController@index');

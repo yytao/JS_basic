@@ -6,7 +6,7 @@
 
 @section("content")
     <!--内容 start-->
-    <div class="row no-margin">
+    <div class="row no-margin content">
 
         <div class="col-md-9 col-xs-12 gm-content-left">
             <h1 class="gm-title">

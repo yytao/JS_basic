@@ -33,11 +33,14 @@
 .gm-text{
 	border-bottom:1px dashed #e0e0e0;
 }
+.content{
+    padding: 0 3% 30px;
+}
 @media screen and (max-width:767px) {
 	.gm-content-left{
 		width:100%;
 		margin-right:0;
-		padding:0 10px 20px;
+		padding:0 0 0 20px;
 	}
 	.gm-title{
 		font-size: 30px;

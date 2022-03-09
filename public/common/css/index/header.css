@@ -1,9 +1,12 @@
+*{
+    font-size: 18px;
+}
 a, a:visited, a:focus, a:active, a:hover {
     text-decoration: none;
     outline: none;
 }
 .two-padding{
-	padding:0 3%;
+	padding:0;
 }
 .no-padding{
 	padding:0;
@@ -21,7 +24,7 @@ a, a:visited, a:focus, a:active, a:hover {
 	background:#c10b1b;
 }
 .gm-search-font{
-	padding-left:0;
+	padding-left: 2%;
 	color:#fff;
 	line-height:48px;
 	letter-spacing:6px;
