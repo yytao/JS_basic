@@ -11,6 +11,15 @@ class Magazine extends Model
     protected $table = "zz_magazine";
     protected $guarded = [];
 
+    protected static function booted()
+    {
+        static::deleting(function ($_it) {
+
+            ArticleList::where('magazine_id', $_it->magazine_id)->delete();
+            return true;
+        });
+    }
+
     protected function serializeDate(\DateTimeInterface $date){
         return $date->format('Y-m-d H:i:s');
     }
@@ -41,6 +50,8 @@ class Magazine extends Model
 
         return $returnMsg;
     }
+
+
 
 
 }

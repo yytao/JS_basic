@@ -17,7 +17,8 @@ class IndexController extends Controller
      */
     public function index(Request $request, $year = null)
     {
-        if(empty($year)) { $year = date('Y'); }
+        if(empty($year)) { $year = date('Y')-1; }
+
         $magazine = Magazine::select('magazine_id','page_name','mimg','pdf_file','page_date')
             ->where('year', $year)
             ->orderBy('page_no', 'asc')

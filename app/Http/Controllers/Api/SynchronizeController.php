@@ -18,6 +18,12 @@ class SynchronizeController extends Controller
      */
     public function index()
     {
+
+        $content = file_get_contents(base_path().'\public\journal\[期刊]20210204\文字/[文苑]留学干饭人的专属味道[孙浚博].txt');
+        
+        dd($content);
+
+
         $return  = [];
 
         //根目录
@@ -64,8 +70,6 @@ class SynchronizeController extends Controller
 
             $this->excuArticle($insertData['magazine_id'], $item);
             $return[] = $item;
-
-
         }
 
         //response返回，200状态
@@ -77,6 +81,7 @@ class SynchronizeController extends Controller
 
     public function excuArticle($magazine_id, $folder = NULL)
     {
+        header("Content-Type:text/html;charset=utf8");
         if(empty($folder)){ return false; }
 
         $insertData = [];
@@ -85,10 +90,30 @@ class SynchronizeController extends Controller
         $files = $disk->allFiles('public/journal/'.$folder.'/文字/');
 
         foreach ($files as $k=>$item){
-            $article = $disk->get($item);
-            $content = @mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5' );
+            //$article = $disk->get($item);
+            $file = base_path().'/'.$item;
+            $article = file_get_contents($file);
+
+            //$content = mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5,ASCII');
+
+            $typeofData = mb_detect_encoding($article, array("GBK","GB2312","UTF-8","ASCII","BIG5"));
+
+            dd($article);
+
+            $encoding = array('UTF-8', 'ASCII', 'GB2312', 'GBK');
+
+            dd(mb_detect_encoding($article));
+
+            $content = mb_convert_encoding($article, "UTF-8", mb_detect_encoding($article,$encoding));
+            //$content = $article;
+
+
+
             $content = str_replace("\r\n", '<br>', $content);
             $content = str_replace("\n", '<br>', $content);
+            $content = str_replace("\r \r", '<br>', $content);
+            $content = str_replace("\r\r", '<br>', $content);
+            $content = str_replace("\r", '<br>', $content);
             $content = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $content);
             $contentArr = explode('<br>', $content);
             //处理每个元素，将<br>替换为段落p标签
@@ -96,6 +121,8 @@ class SynchronizeController extends Controller
                 $value = "<p>" . $value . "</p>";
             });
             $newContent = implode('', $contentArr);
+
+            dd($newContent);
 
             $article_id = $this->getRandomString(6).'-'.$this->getRandomString(6).'-'.$this->getRandomString(6).'-';
             $article_id .= $this->getRandomString(5).'-'.$this->getRandomString(5);
@@ -109,8 +136,6 @@ class SynchronizeController extends Controller
             $insertData['content'] = $newContent;
 
             ArticleList::create($insertData);
-
-//            dd($insertData);
         }
     }
 

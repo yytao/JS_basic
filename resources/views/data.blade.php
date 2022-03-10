@@ -40,17 +40,13 @@
                 <!-- /.box-body -->
             </div>
 
-            <div class="box box-default output-box hide" id="output-box">
+            <div class="box box-default output-box" id="output-box">
                 <div class="box-header with-border">
                     <i class="fa fa-terminal"></i>
                     <h3 class="box-title">Output</h3>
                 </div>
                 <!-- /.box-header -->
-                <div class="box-body" id="box-body">
-                    <pre class="output-body"></pre>
-                    <pre class="output-body"></pre>
-                </div>
-
+                <div class="box-body" id="box-body"></div>
                 <!-- /.box-body -->
             </div>
         </div>
@@ -71,15 +67,13 @@
                             $('.output-box').removeClass('hide');
                             for(var value of data.info)
                             {
-                                $('.output-box .output-body').append("<pre class='output-body'>"+value+" is done</pre>");
+                                $('.output-box .box-body').append("<pre class='output-body'>"+value+" is done</pre>");
                             }
                         }
                         NProgress.done();
                     }
                 });
             });
-
-
 
 
             $('.run-wash-article').click(function (e) {
