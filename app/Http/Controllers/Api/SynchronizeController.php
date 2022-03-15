@@ -20,7 +20,7 @@ class SynchronizeController extends Controller
     {
 
         $content = file_get_contents(base_path().'\public\journal\[期刊]20210204\文字/[文苑]留学干饭人的专属味道[孙浚博].txt');
-        
+
         dd($content);
 
 
