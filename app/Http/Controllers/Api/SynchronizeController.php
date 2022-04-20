@@ -18,11 +18,8 @@ class SynchronizeController extends Controller
      */
     public function index()
     {
-
-        $content = file_get_contents(base_path().'\public\journal\[期刊]20210204\文字/[文苑]留学干饭人的专属味道[孙浚博].txt');
-
-        dd($content);
-
+        //$content = file_get_contents(base_path().'\public/journal/[期刊]20210204/文字/[封面]善意是精神世界的阳光[吴佳涵].txt');
+        //dd($content);
 
         $return  = [];
 
@@ -94,20 +91,19 @@ class SynchronizeController extends Controller
             $file = base_path().'/'.$item;
             $article = file_get_contents($file);
 
-            //$content = mb_convert_encoding( $article, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5,ASCII');
+            //$typeofData = mb_detect_encoding($article, array("GBK","GB2312","UTF-8","UTF-16","UTF-32","ASCII","BIG5"));
+            //dd($typeofData);
 
-            $typeofData = mb_detect_encoding($article, array("GBK","GB2312","UTF-8","ASCII","BIG5"));
+            $encoding = array("GBK","GB2312","UTF-8","UTF-16","ASCII","BIG5");
+            try {
+                $content = mb_convert_encoding($article, "UTF-8", mb_detect_encoding($article,$encoding));
+            } catch (\Exception $exception) {
 
-            dd($article);
+                dd($item);
+                dd($exception->getMessage());
+            }
 
-            $encoding = array('UTF-8', 'ASCII', 'GB2312', 'GBK');
-
-            dd(mb_detect_encoding($article));
-
-            $content = mb_convert_encoding($article, "UTF-8", mb_detect_encoding($article,$encoding));
             //$content = $article;
-
-
 
             $content = str_replace("\r\n", '<br>', $content);
             $content = str_replace("\n", '<br>', $content);
@@ -121,8 +117,6 @@ class SynchronizeController extends Controller
                 $value = "<p>" . $value . "</p>";
             });
             $newContent = implode('', $contentArr);
-
-            dd($newContent);
 
             $article_id = $this->getRandomString(6).'-'.$this->getRandomString(6).'-'.$this->getRandomString(6).'-';
             $article_id .= $this->getRandomString(5).'-'.$this->getRandomString(5);
