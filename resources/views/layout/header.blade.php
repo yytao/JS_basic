@@ -22,7 +22,6 @@
 </head>
 
 <body>
-
     <div class="container-fluid two-padding">
 
         <!--头部Banner start-->
@@ -40,11 +39,10 @@
                     <a href="/" style="color: white;cursor:pointer;">神州学人</a>
                 </div>
                 <div class="col-md-4 col-xs-12 gm-search-text">
-                    <form class="navbar-form navbar-left" role="search">
-
+                    <form class="navbar-form navbar-left" role="search" action="/search" id="searchForm">
                         <div class="input-group">
                             <div class="input-group-btn">
-                                <select class="btn form-control" name="type">
+                                <select class="btn form-control">
                                     <option>全文检索</option>
                                     <option>标题</option>
                                     <option>作者</option>
@@ -52,12 +50,11 @@
                                 </select>
                             </div><!-- /btn-group -->
 
-                            <input type="text" class="form-control" name="keyword" placeholder="键入关键词  ">
+                            <input type="text" class="form-control" name="keyword" value="{{ $keyword??'' }}" placeholder="键入关键词">
                             <span class="input-group-btn">
-                                <button class="btn btn-default gm-search-btn" type="button">Go!</button>
+                                <button class="btn btn-default gm-search-btn" type="button" id="submitBtn">检索</button>
                             </span>
                         </div><!-- /input-group -->
-
                     </form>
                 </div>
             </div>
@@ -66,7 +63,6 @@
 
         <!--导航部分start-->
         <nav class="navbar navbar-default">
-
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed " data-toggle="collapse"
@@ -111,7 +107,6 @@
                         </ul>
                     </div>
                     @endif
-
                 </div>
             </div>
         </nav>
@@ -153,7 +148,11 @@
         </div>
         <!--回到顶部end-->
     </div>
-
 </body>
-
 </html>
+
+<script>
+    $('#submitBtn').click(function (){
+        $('#searchForm').submit();
+    })
+</script>

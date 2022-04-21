@@ -19,3 +19,6 @@ Route::get('/year/{year}', [\App\Http\Controllers\IndexController::class, 'index
 
 Route::get('/catalogue/{magaid}/date/{date}', [\App\Http\Controllers\CatalogueController::class, 'index']);
 Route::get('/article/{article_id}/magaid/{magaid}', [\App\Http\Controllers\CatalogueController::class, 'article']);
+
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index']);
+
