@@ -15,4 +15,9 @@ class ArticleList extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
+    public function magazine()
+    {
+        return $this->hasOne(Magazine::class, 'magazine_id', 'magazine_id');
+    }
+
 }

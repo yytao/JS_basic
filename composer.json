@@ -14,6 +14,7 @@
         "jonexyz/wang-editor-v4": "^1.0",
         "laravel-admin-ext/cropper": "^1.0",
         "laravel/framework": "^8.65",
+        "laravel/helpers": "^1.5",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5"
     },
