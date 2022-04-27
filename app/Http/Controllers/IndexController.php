@@ -58,4 +58,29 @@ class IndexController extends Controller
     }
 
 
+    /*
+     *
+     *
+     */
+    public function login()
+    {
+        return view('login');
+    }
+
+    /*
+     *
+     */
+    public function loginSubmit(Request $request)
+    {
+        $password = $request->input('password');
+
+        if($password == 'WptF,zd41') {
+
+        }else{
+            return response(200, [
+                'message' => "错误",
+            ]);
+        }
+    }
+
 }
