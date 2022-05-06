@@ -24,19 +24,12 @@ class accessView {
 
             if(empty($user)){
                 Cookie::queue(Cookie::forget('openid'));
-                Cookie::queue(Cookie::forget('user_id'));
-                Cookie::queue(Cookie::forget('wx_username'));
-                return redirect('/');
+                return redirect('/login');
             }
 
-            if($user->status == 0){
-                return redirect('/user/real-name');
-            }elseif ($user->status == 1){
-                return redirect('/user/status-msg');
-            }
-
+            return redirect('/');
         }else{
-            //Redis::setex('weixin_referrer_uri', 300, config('app.url').\Request::getRequestUri());
+
             return redirect('/login');
         }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Magazine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\View\View;
 use DB;
 
@@ -74,8 +75,15 @@ class IndexController extends Controller
     {
         $password = $request->input('password');
 
-        if($password == 'WptF,zd41') {
+        $random = md5(random_int(99, 99999));
 
+        dd($random);
+
+        if($password == 'WptF,zd41') {
+            //
+
+
+            Redis::setex('site', (3600 * 24 * 25), );
         }else{
             return response(200, [
                 'message' => "错误",
