@@ -18,16 +18,11 @@ class accessView {
     public function handle($request, Closure $next){
 
         //验证是否有历史授权
-        if(Cookie::get('openid') != '' && Cookie::get('openid') == Redis::get(Cookie::get('openid'))){
-            //if(1==1){//本地测试时打开
-            $user = IndexUsers::find(Cookie::get('user_id'));
+        if(Cookie::get('salt') != '' && Cookie::get('signature') == Redis::get(Cookie::get('salt'))){
 
-            if(empty($user)){
-                Cookie::queue(Cookie::forget('openid'));
-                return redirect('/login');
-            }
+            //只要进入此分支，则判断成功
+            return $next($request);
 
-            return redirect('/');
         }else{
 
             return redirect('/login');

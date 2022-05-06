@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Magazine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\View\View;
 use DB;
@@ -75,19 +76,21 @@ class IndexController extends Controller
     {
         $password = $request->input('password');
 
-        $random = md5(random_int(99, 99999));
-
-        dd($random);
+        $salt = md5(random_int(99, 99999));
 
         if($password == 'WptF,zd41') {
-            //
+            $signature = md5($password.$salt);
+            $timeOut = 3600 * 24;
 
+            Redis::setex($salt, $timeOut, $signature);
+            Cookie::queue('salt', $salt, $timeOut);
+            Cookie::queue('signature', $signature, $timeOut);
 
-            Redis::setex('site', (3600 * 24 * 25), );
+            return redirect("/");
         }else{
-            return response(200, [
-                'message' => "错误",
-            ]);
+
+            $error = "密码错误，请重试！";
+            return view('login', compact('error'));
         }
     }
 
